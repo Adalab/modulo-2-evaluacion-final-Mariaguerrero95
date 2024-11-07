@@ -36,21 +36,38 @@ function renderingSeries (series, resultsSection){
     //A continuación pintaré las series en la página
     for (const serie of series){
         const listOfSeries = document.createElement ("div");
-         //Con el id(mal_id lo he conseguido del enlace de la API) con el mal_id identifico cuando la usuaria ha hecho click
+         // Con el id(mal_id lo he conseguido del enlace de la API) con el mal_id identifico cuando la usuaria ha hecho click
         listOfSeries.id = serie.mal_id;
-        
-        //Ahora, con el DOM crearé los elementos y subelementos de la lista de series, ya que he dejado vaciado el HTML
+
+        // Ahora, con el DOM crearé los elementos y subelementos de la lista de series, ya que he dejado vaciado el HTML
         const title = document.createElement("h2");
         const textTitle = document.createTextNode(serie.title);
         title.appendChild(textTitle);
 
         const cardImg = document.createElement("img");
-        cardImg.setAttribute("src", serie.images.jpg.image_url);
+        //cardImg.setAttribute("src", serie.images.jpg.image_url);
+        // Verificar si la imagen de la serie es la imagen predeterminada de MyAnimeList
+        const imageUrl = serie.images.jpg.image_url;
+        if (imageUrl === "https://cdn.myanimelist.net/img/sp/icon/apple-touch-icon-256.png") {
+            // Si la imagen es la predeterminada, usar una imagen de placeholder
+            cardImg.setAttribute("src", "https://via.placeholder.com/210x295/ffcc00/666666/?text=Anime");
+        } else {
+            // Si tiene una imagen válida, usar esa imagen
+            cardImg.setAttribute("src", imageUrl);
+            // Como no me funciona la imagen, se ve rota en las que no vienen con imagen por defecto, escribo una funcion y meto la imagen
+            cardImg.onerror = function() {
+            cardImg.setAttribute("src", "https://via.placeholder.com/210x295/ffcc00/666666/?text=Anime");
+            }
+        }
 
+        // Añadir los elementos creados al contenedor de la serie
         listOfSeries.appendChild(title);
         listOfSeries.appendChild(cardImg);
 
+        // Añadir la serie a la sección de resultados
         resultsSection.appendChild(listOfSeries);
+
+         // Añadir el manejador de eventos para el click
         listOfSeries.addEventListener("click",handleFavoriteSeries);
     }
 }
