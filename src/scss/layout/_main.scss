@@ -2,9 +2,12 @@ body {
     background-color: $terciary-color;
 }
 .title {
-    margin-left: 40px;
     padding: 8px;
     color: $main-color;
+    margin: 0;
+}
+form{
+    margin-bottom: 20px;
 }
 header {
     display: flex;
@@ -14,28 +17,24 @@ header {
     padding: 30px;
     font-family: $font-main;
 }
-.search{
+.search, .resetButton {
     padding: 5px;
     height: 25px;
     border: 2px solid rgb(47, 0, 255);
     border-radius: 5px;
     background-color: $background-color;
+    cursor: pointer;
     padding-bottom: 19px;
 }
-.resetButton{
-    padding: 5px;
-    height: 25px;
-    border: 2px solid rgb(47, 0, 255);
+.input {
+    padding: 12.5px; 
+    border: 2px solid #ccc; 
     border-radius: 5px;
-    background-color: $background-color;
-    padding-bottom: 19px;
-}
-.input{
     margin-left: 55px;
     height: 25px;
     width: 280px;
 }
-.containerfavorites{
+.containerfavorites {
     margin: 40px;
     width: 300px;
     padding: 40px;
@@ -43,17 +42,43 @@ header {
     color: $main-color;
     background-color: $secondary-color;
     padding-left: 39px;
-    }
+}
 main {
     display: flex;
     flex-direction: row;
 }
-.results{
+.results {
+    display: flex; 
+    flex-direction: column; 
+    align-items: center;
     margin: 40px;
-    width: 300px;
-    padding: 40px;
+    width: 65%; 
     font-family: $font-main;
     color: $main-color;
     background-color: $background-color;
-    padding-left: 38px;
+}
+.results, .container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;  
+}
+.results .container div {
+    width: 180px; 
+    text-align: center; 
+    background-color: $secondary-color; 
+    padding: 10px; 
+    border-radius: 5px;
+}
+.results, .container img { 
+    width: 100%; 
+    height: auto; 
+    border-radius: 5px; 
+}
+.containerfavorites, .results { 
+    padding: 20px; 
+    border: 1px solid #ccc; 
+    border-radius: 5px; 
+}
+.containerfavorites { 
+    width: 30%; 
 }

@@ -33,7 +33,7 @@
     
 */
 
-//constantes globales
+//variables globales
 const searchInput = document.querySelector(".js-input");
 const searchButton = document.querySelector(".js-search");
 const resultsSection = document.querySelector(".js-container");
@@ -91,7 +91,7 @@ function renderingSeries (series, resultsSection){
         // Añadir los elementos creados al contenedor de la serie
         listOfSeries.appendChild(title);
         listOfSeries.appendChild(cardImg);
-
+        
         // Añadir la serie a la sección de resultados
         resultsSection.appendChild(listOfSeries);
 
@@ -127,7 +127,7 @@ function handleFavoriteSeries (event){
     }
 };
 
-//Creo una función flecha donde meteré el fetch (API)
+// Creo una función flecha para obtener las series desde la API (FETCH)
 const getApiSeries = () => {
     searchInput.value;
     fetch (`https://api.jikan.moe/v4/anime?q=${searchInput.value}`)
@@ -140,7 +140,7 @@ const getApiSeries = () => {
     })
 }
 
-//Creo una función manejadora en donde almacenaré los datos del input y para que funcione el click en el botón Buscar
+//Creo una función manejadora para manejar el click en el botón de búsqueda
 function handleClick(event) {
     event.preventDefault();
     getApiSeries();
@@ -148,9 +148,8 @@ function handleClick(event) {
 
 searchButton.addEventListener("click", handleClick);
 
-
 //BONUS BOTÓN RESET
-//Seleccionar el botón Reset
+//Seleccionar el botón Reset (Variable botón reset)
 const resetButton = document.querySelector(".js-reset");
 //Creo una función callback para resetear la página
 function resetPage(){
