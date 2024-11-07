@@ -5,10 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Evaluación María Guerrero web developer</title>
     
-    <link rel="stylesheet" href="./assets/index-cc1e0efe.css">
+    <link rel="stylesheet" href="./assets/index-a1b5f8a2.css">
   </head>
   <body>
-    <header><h1>Hola mundo!</h1></header>
+    <header>
+      <h1 class="title">Buscador de Series de Anime</h1>
+    </header>
+    <form action="">
+      <label for="name"></label>
+      <input class="input js-input" type="text" id="name"/>
+      <input class="search js-search" value="Buscar" type="submit"/>
+    </form>
+    <main>
+      <aside class="containerfavorites">
+        <h2 class="favorites">Series favoritas</h2>
+        <div class="js-favorites"></div>
+      </aside>
+      <section class="results">
+        <h2>Resultados</h2>
+        <div class="container js-container"></div>
+      </section>
+    </main>
     <script src="./js/main.js"></script>
   </body>
 </html>
