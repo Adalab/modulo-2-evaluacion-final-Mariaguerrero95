@@ -17,7 +17,7 @@
 const searchInput = document.querySelector(".js-input");
 const searchButton = document.querySelector(".js-search");
 const resultsSection = document.querySelector(".js-container");
-const favoriteSeries = document.querySelector(".js-container");
+const favoriteSeries = document.querySelector(".js-favorites");
 
 //Creo también una variable global en forma de array de las series
 let resultsList = [];
@@ -27,9 +27,9 @@ let favoriteSeriesList = [];
 const getFavorite = localStorage.getItem("favorites")
 
 if(getFavorite !== null){
-    resultsList = getFavorite; 
-
+    resultsList = JSON.parse(getFavorite); // Parsea los datos
 }
+
 //Defino una función para renderizar series, aquí utilizaré document.createElement para crear nuevos elementos en el DOM, cada vez que se llama a esta función para generar nuevos elementos HTML  para mostrar cada serie en el DOM
 function renderingSeries (series, resultsSection){
     resultsSection.innerHTML =""; //Pongo comillas vacías para que vacie la sección de resultados
@@ -38,14 +38,18 @@ function renderingSeries (series, resultsSection){
         const listOfSeries = document.createElement ("div");
          //Con el id(mal_id lo he conseguido del enlace de la API) con el mal_id identifico cuando la usuaria ha hecho click
         listOfSeries.id = serie.mal_id;
+        
         //Ahora, con el DOM crearé los elementos y subelementos de la lista de series, ya que he dejado vaciado el HTML
         const title = document.createElement("h2");
         const textTitle = document.createTextNode(serie.title);
         title.appendChild(textTitle);
+
         const cardImg = document.createElement("img");
         cardImg.setAttribute("src", serie.images.jpg.image_url);
+
         listOfSeries.appendChild(title);
         listOfSeries.appendChild(cardImg);
+
         resultsSection.appendChild(listOfSeries);
         listOfSeries.addEventListener("click",handleFavoriteSeries);
     }
@@ -66,16 +70,15 @@ function handleFavoriteSeries (event){
     const indexSerieFavorite = favoriteSeriesList.findIndex((favoriteSerie)=>{
         console.log(idClick);
         return idClick == favoriteSerie.mal_id;
-    
-    //
-
-    
     });
-    //Ahora voy a verificar si una serie seleccionada ya está en la lista de series favoritas utilizando .indexOf()
-    //const indexSerieFavorite ===
 
-
-}
+    //Ahora voy a verificar si una serie seleccionada (if) 
+    if (indexSerieFavorite === -1){
+        favoriteSeriesList.push(idSerieSelected); //Añade la serie
+        localStorage.setItem("favoritos", JSON.stringify(favoriteSeriesList)); //Guarda como JSON string
+        renderingSeries(favoriteSeriesList, favoriteSeries);
+    }
+};
 
 //Creo una función flecha donde meteré el fetch (API)
 const getApiSeries = () => {
@@ -88,7 +91,6 @@ const getApiSeries = () => {
         
     })
 }
-    
 
 //Creo una función manejadora en donde almacenaré los datos del input y para que funcione el click en el botón Buscar
 function handleClick(event) {
