@@ -17,9 +17,10 @@ header {
 .search{
     padding: 5px;
     height: 25px;
-    border: 1px solid $secondary-color;
+    border: 2px solid rgb(47, 0, 255);
     border-radius: 5px;
     background-color: $background-color;
+    padding-bottom: 19px;
 }
 .input{
     margin-left: 55px;
@@ -33,19 +34,11 @@ header {
     font-family: $font-main;
     color: $main-color;
     background-color: $secondary-color;
-    padding-left: 60px;
+    padding-left: 39px;
     }
 main {
     display: flex;
     flex-direction: row;
-    section {
-        font-family: $main-color;
-        padding: 30px;
-        color: $secondary-color;
-        padding: 40px;
-        margin: 40px;
-        width: 300px;
-    }
 }
 .results{
     margin: 40px;
@@ -54,5 +47,5 @@ main {
     font-family: $font-main;
     color: $main-color;
     background-color: $background-color;
-    padding-left: 80px;
+    padding-left: 38px;
 }
