@@ -46,31 +46,31 @@ let favoriteSeriesList = [];
 //Variable global de las series
 const getFavorite = localStorage.getItem("favorites")
 
-if(getFavorite !== null){
-    favoriteSeriesList = JSON.parse(getFavorite); // Parsea los datos
+if(getFavorite !== null){ // Verifico si la variable getFavorite tiene algún valor y no está vacío o nulo.
+    favoriteSeriesList = JSON.parse(getFavorite); // Si la condición de if es verdadera (no es null), entonces se ejecuta esta línea / JSON.parse es una función que toma una cadena de texto y lo convierte a objeto
     //console.log("Favoritos recuperados desde localStorage:", favoriteSeriesList);
-}
+};
 
-//Defino una función para renderizar series, aquí utilizaré document.createElement para crear nuevos elementos en el DOM, cada vez que se llama a esta función para generar nuevos elementos HTML  para mostrar cada serie en el DOM
+//Defino una función para renderizar series, aquí utilizaré document.createElement para con el DOM crear elementos en mi HTML 
 function renderingSeries (series, resultsSection){
     resultsSection.innerHTML =""; //Pongo comillas vacías para que vacie la sección de resultados
     // A continuación pintaré las series en la página
-    for (const serie of series){
+    for (const serie of series){ 
         const listOfSeries = document.createElement ("div");
          // Con el id(mal_id lo he conseguido del enlace de la API) con el mal_id identifico cuando la usuaria ha hecho click
-        listOfSeries.id = serie.mal_id;
+        listOfSeries.id = serie.mal_id;//Accediendo al id del div / serie.mal_id obtiene el valor de esa propiedad de la serie en particular
 
-        //BONUS, verificar su la serie es favorita y aplicarle el estilo
-        const itsFavorite = favoriteSeriesList.some(fav => fav.mal_id === serie.mal_id);
+        //BONUS, verificar su la serie es favorita y aplicarle el estilo de letra y fondo
+        const itsFavorite = favoriteSeriesList.some(fav => fav.mal_id === serie.mal_id); // .some recorre un array(lista) y me devuelve true si al menos un elemento del array cumple con una condición que especifiques en la función / fav => función flecha, se ejecuta para cada elemento de favoriteSeriesList
         if (itsFavorite) {
             listOfSeries.style.backgroundColor = "#f3fbe1"; // Color fondo la serie favorita
             listOfSeries.style.color = "rgb(66, 236, 227)"; // Color de texto serie favorita
         }
 
-        // Ahora, con el DOM crearé los elementos y subelementos de la lista de series, ya que he dejado vaciado el HTML
+        // Ahora, con el DOM crearé los elementos y sub-elementos de la lista de series, ya que he dejado vaciado el HTML
         const title = document.createElement("h2");
         const textTitle = document.createTextNode(serie.title);
-        title.appendChild(textTitle);
+        title.appendChild(textTitle); //appendChild crea un nuevo elemento al final de la lista de hijos del padre
 
         const cardImg = document.createElement("img");
         const imageUrl = serie.images?.jpg?.image_url;
@@ -98,9 +98,9 @@ function renderingSeries (series, resultsSection){
          // Añadir el manejador de eventos para el click
         listOfSeries.addEventListener("click",handleFavoriteSeries);
     }
-}
+};
 
-// Función para manejar el click en una serie para agregarla a favoritos
+// Función manejadora para el click en una serie para agregarla a favoritos
 function handleFavoriteSeries (event){
     const idClick = (event.currentTarget.id);
    //console.log("handleFavoriteSeries ejecutada") SE EJECUTA BIEN
@@ -108,7 +108,7 @@ function handleFavoriteSeries (event){
     //event.currentTarget; event es el objeto que se genera cuando ocurre el click, currentTarget es el elemento HTML en el que ocurrió el evento, es el div que se ha genereado en renderingSeries(la función de arriba)
     //serie.mal_id;database es la propiedad que permite acceder a los atributos personalizados; data es el elemento del HTML(rendering series); con el id me permite acceder al valor, el identificador de la función de arriba renderingSeries.
     const idSerieSelected = resultsList.find ((serie) => {
-        return idClick == serie.mal_id;
+        return idClick == serie.mal_id;// devuelve algo porque indica a "find" si la serie actual en la iteración es la que estamos buscando.
     });
 
     //const utilizando .findIndex
@@ -117,12 +117,11 @@ function handleFavoriteSeries (event){
         return idClick == favoriteSerie.mal_id;
     });
 
-    //Ahora voy a verificar si una serie seleccionada (if) 
+    //Ahora voy a verificar ... si una serie seleccionada (if) 
     if (indexSerieFavorite === -1){
         favoriteSeriesList.push(idSerieSelected); //Añade la serie
-        localStorage.setItem("favorites", JSON.stringify(favoriteSeriesList));
-        console.log("Favoritos actualizados", favoriteSeriesList) 
-        //Guarda como JSON string
+        localStorage.setItem("favorites", JSON.stringify(favoriteSeriesList));//JSON.stringify lo convierte a texto
+        //console.log("Favoritos actualizados", favoriteSeriesList) 
         renderingSeries(favoriteSeriesList, favoriteSeries);
     }
 };
@@ -138,13 +137,13 @@ const getApiSeries = () => {
         renderingSeries(resultsList, resultsSection);
         
     })
-}
+};
 
 //Creo una función manejadora para manejar el click en el botón de búsqueda
 function handleClick(event) {
     event.preventDefault();
     getApiSeries();
-}
+};
 
 searchButton.addEventListener("click", handleClick);
 
@@ -161,5 +160,5 @@ function resetPage(){
     favoriteSeries.innerHTML = "";
     //Limpio el valor del input de búsqueda
     searchInput.value = "";
-}
+};
 resetButton.addEventListener("click", resetPage);
