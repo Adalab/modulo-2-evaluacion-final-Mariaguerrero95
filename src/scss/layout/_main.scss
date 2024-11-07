@@ -22,6 +22,14 @@ header {
     background-color: $background-color;
     padding-bottom: 19px;
 }
+.resetButton{
+    padding: 5px;
+    height: 25px;
+    border: 2px solid rgb(47, 0, 255);
+    border-radius: 5px;
+    background-color: $background-color;
+    padding-bottom: 19px;
+}
 .input{
     margin-left: 55px;
     height: 25px;

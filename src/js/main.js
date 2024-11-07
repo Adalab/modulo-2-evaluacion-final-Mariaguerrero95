@@ -23,8 +23,14 @@
     - Al recargar la pagina se mostrará el listado de favoritos
 
     CUARTA PARTE (BONUS)
-    - Cuando un fav ya esté añadido, se cambiará su background para que se vea resaltado. Si haces clic nuevamente en una serie que ya es favorita, deberíamos quitarla de favoritos
+    1ºBONUS (BACKGROUND Y COLOR FAVORITES)
+    - En la función "renderingSeries" SI la usuaria añade una serie a favoritos ésta se pondrá de otro color de letra y fondo (IF)
 
+    2ºBONUS (BOTÓN RESET)
+    - Crear en mi HTML un boton y darle una clase para css y otra para js
+    - Crear constante para botón reset (seleccionar js-reset)
+    - Crear una función callback para limpiar los valores de las series favoritas, de la lista y del input
+    
 */
 
 //constantes globales
@@ -67,10 +73,10 @@ function renderingSeries (series, resultsSection){
         title.appendChild(textTitle);
 
         const cardImg = document.createElement("img");
-        const imageUrl = serie.images.jpg.image_url;
+        const imageUrl = serie.images?.jpg?.image_url;
 
         //Ahora, si una serie no tiene imagen le pondré un estilo determinado y si no... (if, else)
-        if (imageUrl === "https://cdn.myanimelist.net/img/sp/icon/apple-touch-icon-256.png") {
+        if (!imageUrl || imageUrl === "https://cdn.myanimelist.net/img/sp/icon/apple-touch-icon-256.png") {
             // Si la imagen es la predeterminada, usar una imagen de placeholder
             cardImg.setAttribute("src", "https://via.placeholder.com/210x295/ffcc00/666666/?text=Anime");
         } else {
@@ -78,7 +84,7 @@ function renderingSeries (series, resultsSection){
             cardImg.setAttribute("src", imageUrl);
             // Como no me funciona la imagen, se ve rota en las que no vienen con imagen por defecto, escribo una funcion y meto la imagen
             cardImg.onerror = function() {
-            cardImg.setAttribute("src", "https://via.placeholder.com/210x295/ffcc00/666666/?text=Anime");
+                cardImg.setAttribute("src", "https://via.placeholder.com/210x295/ffcc00/666666/?text=Anime");
             }
         }
 
@@ -114,13 +120,12 @@ function handleFavoriteSeries (event){
     //Ahora voy a verificar si una serie seleccionada (if) 
     if (indexSerieFavorite === -1){
         favoriteSeriesList.push(idSerieSelected); //Añade la serie
-        localStorage.setItem("favoritos", JSON.stringify(favoriteSeriesList));
+        localStorage.setItem("favorites", JSON.stringify(favoriteSeriesList));
         console.log("Favoritos actualizados", favoriteSeriesList) 
         //Guarda como JSON string
         renderingSeries(favoriteSeriesList, favoriteSeries);
     }
 };
-
 
 //Creo una función flecha donde meteré el fetch (API)
 const getApiSeries = () => {
@@ -128,6 +133,7 @@ const getApiSeries = () => {
     fetch (`https://api.jikan.moe/v4/anime?q=${searchInput.value}`)
     .then (res => res.json())
     .then (data => {
+        console.log(data);
         resultsList = data.data;
         renderingSeries(resultsList, resultsSection);
         
@@ -143,3 +149,18 @@ function handleClick(event) {
 searchButton.addEventListener("click", handleClick);
 
 
+//BONUS BOTÓN RESET
+//Seleccionar el botón Reset
+const resetButton = document.querySelector(".js-reset");
+//Creo una función callback para resetear la página
+function resetPage(){
+    favoriteSeriesList = [];
+    //Elimino los favoritos del localStorage
+    localStorage.removeItem("favorites");
+    //Limpio la sección de resultados y la de favoritos
+    resultsSection.innerHTML = "";
+    favoriteSeries.innerHTML = "";
+    //Limpio el valor del input de búsqueda
+    searchInput.value = "";
+}
+resetButton.addEventListener("click", resetPage);
