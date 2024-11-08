@@ -168,10 +168,9 @@ function handleDeleteFavorite(idMalId) {
     // Buscar la serie en el array de favoritos por el ID
     const indexToDelete = favoriteSeriesList.findIndex((fav) => fav.mal_id === idMalId);
 
-    if (indexToDelete !== -1) {
+    if (indexToDelete !== -1) { //Si indexToDelete es diferente de -1, significa que se ha encontrado la serie en la lista de favoritos
         // Si la serie existe, eliminarla
-        favoriteSeriesList.splice(indexToDelete, 1);
-
+        favoriteSeriesList.splice(indexToDelete, 1); // Splice método para modificar un array, elimina elementos (se está eliminando el elemento en el índice indexToDelete y el número 1 indica que solo se elimina un elemento)
         // Actualizar el localStorage con la nueva lista de favoritos
         localStorage.setItem("favorites", JSON.stringify(favoriteSeriesList));
 
@@ -181,6 +180,20 @@ function handleDeleteFavorite(idMalId) {
         console.log("Serie no encontrada para eliminar");
     }
 }
+
+//FUNCIONALIDAD AL RECARGAR LA PÁGINA LA USUARIA SE PINTEN EN LA LISTA DE FAVORITOS, SUS SERIES FAVORITAS
+function reloadFavoritesToFavoritesList() {
+    const getFavorite = localStorage.getItem("favorites");
+
+    if (getFavorite !== null) {
+        favoriteSeriesList = JSON.parse(getFavorite);
+        // Ahora renderizo las series favoritas desde el localStorage en la sección de favoritos
+        renderingSeries(favoriteSeriesList, favoriteSeries);
+    } 
+}
+
+reloadFavoritesToFavoritesList();
+
 
 // Creo una función flecha para obtener las series desde la API (FETCH)
 const getApiSeries = () => {
