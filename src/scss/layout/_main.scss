@@ -82,3 +82,17 @@ main {
 .containerfavorites { 
     width: 30%; 
 }
+
+//Estilos button "X"
+.delete-X-button {
+    background: none;
+    border: none;
+    font-size: 20px;
+    color: rgb(5, 209, 255);
+    cursor: pointer;
+}
+
+.delete-icon {
+    font-weight: bold;
+    font-size: 18px;
+}

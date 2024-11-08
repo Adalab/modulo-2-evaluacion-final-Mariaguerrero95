@@ -22,14 +22,21 @@
     - Guardar las selecciones favoritas de la usuaria en el navegador local.
     - Al recargar la pagina se mostrará el listado de favoritos
 
-    CUARTA PARTE (BONUS)
-    1ºBONUS (BACKGROUND Y COLOR FAVORITES)
-    - En la función "renderingSeries" SI la usuaria añade una serie a favoritos ésta se pondrá de otro color de letra y fondo (IF)
+    BONUS
 
-    2ºBONUS (BOTÓN RESET)
-    - Crear en mi HTML un boton y darle una clase para css y otra para js
-    - Crear constante para botón reset (seleccionar js-reset)
-    - Crear una función callback para limpiar los valores de las series favoritas, de la lista y del input
+        CUARTA PARTE (BONUS)
+        (BACKGROUND Y COLOR FAVORITES)
+            - En la función "renderingSeries" SI la usuaria añade una serie a favoritos ésta se pondrá de otro color de letra y fondo (IF)
+
+        QUINTA PARTE (BONUS)
+            - Quiero agregar una "X" a todas las series en favoritos para que al hacer click sobre cada una de las "X" se vayan eliminando
+            - Primero tengo que modificar en "renderingSeries" que dibuje los favoritos junto con un botón de "X"
+            - Luego crearé una función manjeadora en la que eliminaré cada favorito de la lista y del localStorage cuando se haga click en "X"
+
+        SEXTA PARTE (BOTÓN RESET)
+            - Crear en mi HTML un boton y darle una clase para css y otra para js
+            - Crear constante para botón reset (seleccionar js-reset)
+            - Crear una función callback para limpiar los valores de las series favoritas, de la lista y del input
     
 */
 
@@ -57,11 +64,15 @@ function renderingSeries (series, resultsSection){
     // A continuación pintaré las series en la página
     for (const serie of series){ 
         const listOfSeries = document.createElement ("div");
+        listOfSeries.classList.add("serie") // /BONUS AÑADIR "X": Agrego una clase al contenedor de cada serie
          // Con el id(mal_id lo he conseguido del enlace de la API) con el mal_id identifico cuando la usuaria ha hecho click
         listOfSeries.id = serie.mal_id;//Accediendo al id del div / serie.mal_id obtiene el valor de esa propiedad de la serie en particular
-
+        /*if (!serie.mal_id) {
+            console.warn("Serie sin mal_id encontrada", serie);
+            continue; // Salta a la siguiente si no hay mal_id
+        }*/
         //BONUS, verificar su la serie es favorita y aplicarle el estilo de letra y fondo
-        const itsFavorite = favoriteSeriesList.some(fav => fav.mal_id === serie.mal_id); // .some recorre un array(lista) y me devuelve true si al menos un elemento del array cumple con una condición que especifiques en la función / fav => función flecha, se ejecuta para cada elemento de favoriteSeriesList
+        const itsFavorite = favoriteSeriesList.some(fav => fav && fav.mal_id === serie.mal_id); // .some recorre un array(lista) y me devuelve true si al menos un elemento del array cumple con una condición que especifiques en la función / fav => función flecha, se ejecuta para cada elemento de favoriteSeriesList
         if (itsFavorite) {
             listOfSeries.style.backgroundColor = "#f3fbe1"; // Color fondo la serie favorita
             listOfSeries.style.color = "rgb(66, 236, 227)"; // Color de texto serie favorita
@@ -91,14 +102,38 @@ function renderingSeries (series, resultsSection){
         // Añadir los elementos creados al contenedor de la serie
         listOfSeries.appendChild(title);
         listOfSeries.appendChild(cardImg);
-        
+
+        //CONTINUACIÓN BONUS AÑADIR "X". Si estoy en la lista de favoritos, añadir boton en forma de "X"
+        if (resultsSection === favoriteSeries) {
+            const deleteButton = document.createElement("button");
+            deleteButton.classList.add("delete-X-button");
+
+            // Crear un botón con una "X" normal
+            const deleteText = document.createElement ("span");
+            deleteText.textContent = "X";
+            deleteButton.appendChild(deleteText);
+            deleteButton.classList.add("delete-icon");
+
+            // Agregar evento para eliminar la serie de favoritos
+            deleteButton.addEventListener("click", (event) => {
+                event.stopPropagation(); // Evita que el clic en "X" dispare el evento de agregar a favoritos
+                handleDeleteFavorite(serie.mal_id); 
+            });
+            // Añado el botón de "X" al contenedor de la serie
+            listOfSeries.prepend(deleteButton); // No me gustaba la x abajo y he cambiado appendchild por prepend para que la X se inserte arriba
+
+        } else {
+            // Solo agrega el evento de click para añadir a favoritos en la lista principal
+            listOfSeries.addEventListener("click", handleFavoriteSeries);
+        }
+
         // Añadir la serie a la sección de resultados
         resultsSection.appendChild(listOfSeries);
-
+    
          // Añadir el manejador de eventos para el click
         listOfSeries.addEventListener("click",handleFavoriteSeries);
     }
-};
+}
 
 // Función manejadora para el click en una serie para agregarla a favoritos
 function handleFavoriteSeries (event){
@@ -110,10 +145,14 @@ function handleFavoriteSeries (event){
     const idSerieSelected = resultsList.find ((serie) => {
         return idClick == serie.mal_id;// devuelve algo porque indica a "find" si la serie actual en la iteración es la que estamos buscando.
     });
+    if (!idSerieSelected) {
+        console.error("Serie no encontrada en resultsList con el id:", idClick);
+        return;
+    }
 
     //const utilizando .findIndex
     const indexSerieFavorite = favoriteSeriesList.findIndex((favoriteSerie)=>{
-        console.log(idClick);
+        //console.log(idClick);
         return idClick == favoriteSerie.mal_id;
     });
 
@@ -125,6 +164,25 @@ function handleFavoriteSeries (event){
         renderingSeries(favoriteSeriesList, favoriteSeries);
     }
 };
+
+// CONTINUACIÓN BONUS AGREGAR "X"
+function handleDeleteFavorite(idMalId) {
+    // Buscar la serie en el array de favoritos por el ID
+    const indexToDelete = favoriteSeriesList.findIndex((fav) => fav.mal_id === idMalId);
+
+    if (indexToDelete !== -1) {
+        // Si la serie existe, eliminarla
+        favoriteSeriesList.splice(indexToDelete, 1);
+
+        // Actualizar el localStorage con la nueva lista de favoritos
+        localStorage.setItem("favorites", JSON.stringify(favoriteSeriesList));
+
+        // Re-renderizar la lista de favoritos
+        renderingSeries(favoriteSeriesList, favoriteSeries);
+    } else {
+        console.log("Serie no encontrada para eliminar");
+    }
+}
 
 // Creo una función flecha para obtener las series desde la API (FETCH)
 const getApiSeries = () => {
