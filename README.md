@@ -5,6 +5,10 @@
 En esta página web podrás buscar tus series de anime favoritas, así como añadirlas a tus favoritas.
 Es mi trabajo final en la segunda evaluación del Máster Front-end Developer por lo que combino HTML, SASS y Javascript, gracias a esta última la página es interactiva y dinámica; ¡Descúbrela!
 
+# ¿Dónde puedo encontrar la página web?
+
+Arriba a la derecha debajo de donde pone About tienes en enlace, si pinchas te redirigirá a la página web.
+
 # Instalación y configuración
 
 1. Clonar el repositorio
