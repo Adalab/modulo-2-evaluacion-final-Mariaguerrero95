@@ -65,7 +65,7 @@ function renderingSeries (series, resultsSection){
     for (const serie of series){ 
         const listOfSeries = document.createElement ("div");
         listOfSeries.classList.add("serie") // /BONUS AÑADIR "X": Agrego una clase al contenedor de cada serie
-         // Con el id(mal_id lo he conseguido del enlace de la API) con el mal_id identifico cuando la usuaria ha hecho click
+         // Con el id(mal_id lo he conseguido del enlace de la API, con el mal_id identifico cuando la usuaria ha hecho click
         listOfSeries.id = serie.mal_id;//Accediendo al id del div / serie.mal_id obtiene el valor de esa propiedad de la serie en particular
         /*if (!serie.mal_id) {
             console.warn("Serie sin mal_id encontrada", serie);
@@ -126,10 +126,8 @@ function renderingSeries (series, resultsSection){
             // Solo agrega el evento de click para añadir a favoritos en la lista principal
             listOfSeries.addEventListener("click", handleFavoriteSeries);
         }
-
         // Añadir la serie a la sección de resultados
-        resultsSection.appendChild(listOfSeries);
-    
+        resultsSection.appendChild(listOfSeries); 
          // Añadir el manejador de eventos para el click
         listOfSeries.addEventListener("click",handleFavoriteSeries);
     }
