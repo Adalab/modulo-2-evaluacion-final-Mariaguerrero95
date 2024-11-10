@@ -216,11 +216,7 @@ const getApiSeries = () => {
     .then (data => {
         //console.log(data);
         resultsList = data.data;
-        //if (resultsList && resultsList.length > 0) {
         renderingSeries(resultsList, resultsSection);
-        //} else {
-        //   console.error("No se encontraron resultados");
-        //}
     })
 };
 
