@@ -61,16 +61,19 @@ if(getFavorite !== null){ // Verifico si la variable getFavorite tiene algún va
 //Defino una función para renderizar series, aquí utilizaré document.createElement para con el DOM crear elementos en mi HTML 
 function renderingSeries (series, resultsSection){
     resultsSection.innerHTML =""; //Pongo comillas vacías para que vacie la sección de resultados
+    const validSeries = series.filter(serie => serie && serie.mal_id);
     // A continuación pintaré las series en la página
-    for (const serie of series){ 
-        const listOfSeries = document.createElement ("div");
-        listOfSeries.classList.add("serie") // /BONUS AÑADIR "X": Agrego una clase al contenedor de cada serie
-         // Con el id(mal_id lo he conseguido del enlace de la API, con el mal_id identifico cuando la usuaria ha hecho click
-        listOfSeries.id = serie.mal_id;//Accediendo al id del div / serie.mal_id obtiene el valor de esa propiedad de la serie en particular
+
+    for (const serie of validSeries){ 
         /*if (!serie.mal_id) {
             console.warn("Serie sin mal_id encontrada", serie);
             continue; // Salta a la siguiente si no hay mal_id
         }*/
+        const listOfSeries = document.createElement ("div");
+        listOfSeries.classList.add("serie") // /BONUS AÑADIR "X": Agrego una clase al contenedor de cada serie
+         // Con el id(mal_id lo he conseguido del enlace de la API, con el mal_id identifico cuando la usuaria ha hecho click
+        listOfSeries.id = serie.mal_id;//Accediendo al id del div / serie.mal_id obtiene el valor de esa propiedad de la serie en particular
+        
         //BONUS, verificar su la serie es favorita y aplicarle el estilo de letra y fondo
         const itsFavorite = favoriteSeriesList.some(fav => fav && fav.mal_id === serie.mal_id); // .some recorre un array(lista) y me devuelve true si al menos un elemento del array cumple con una condición que especifiques en la función / fav => función flecha, se ejecuta para cada elemento de favoriteSeriesList
         if (itsFavorite) {
@@ -138,9 +141,17 @@ function handleFavoriteSeries (event){
     const idClick = (event.currentTarget.id);
    //console.log("handleFavoriteSeries ejecutada") SE EJECUTA BIEN
    //console.log("ID Clicked:", idClick); FUNCIONA EL CLICK
-    //event.currentTarget; event es el objeto que se genera cuando ocurre el click, currentTarget es el elemento HTML en el que ocurrió el evento, es el div que se ha genereado en renderingSeries(la función de arriba)
-    //serie.mal_id;database es la propiedad que permite acceder a los atributos personalizados; data es el elemento del HTML(rendering series); con el id me permite acceder al valor, el identificador de la función de arriba renderingSeries.
-    const idSerieSelected = resultsList.find ((serie) => {
+   //event.currentTarget; event es el objeto que se genera cuando ocurre el click, currentTarget es el elemento HTML en el que ocurrió el evento, es el div que se ha genereado en renderingSeries(la función de arriba)
+   //serie.mal_id;database es la propiedad que permite acceder a los atributos personalizados; data es el elemento del HTML(rendering series); con el id me permite acceder al valor, el identificador de la función de arriba renderingSeries.
+    
+    // Comprobar si idClick está definido y no es vacío
+    if (!idClick) {
+        console.error("ID no encontrado para la serie seleccionada");
+        return;
+    }
+    //Filtrar los resultados para asegurarnos de que no haya elementos null o undefined
+    const validResultsList = resultsList.filter(serie => serie && serie.mal_id);
+    const idSerieSelected = validResultsList.find((serie) => {
         return idClick == serie.mal_id;// devuelve algo porque indica a "find" si la serie actual en la iteración es la que estamos buscando.
     });
     if (!idSerieSelected) {
@@ -148,8 +159,10 @@ function handleFavoriteSeries (event){
         return;
     }
 
+    // Filtrar favoriteSeriesList para asegurarnos de que solo contiene elementos válidos
+    const validFavoriteSeriesList = favoriteSeriesList.filter(fav => fav && fav.mal_id);
     //const utilizando .findIndex
-    const indexSerieFavorite = favoriteSeriesList.findIndex((favoriteSerie)=>{
+    const indexSerieFavorite = validFavoriteSeriesList.findIndex((favoriteSerie)=>{
         //console.log(idClick);
         return idClick == favoriteSerie.mal_id;
     });
@@ -165,8 +178,10 @@ function handleFavoriteSeries (event){
 
 // CONTINUACIÓN BONUS AGREGAR "X"
 function handleDeleteFavorite(idMalId) {
+    // Filtrar las series inválidas de favoriteSeriesList
+    const validFavoriteSeriesList = favoriteSeriesList.filter(fav => fav && fav.mal_id);
     // Buscar la serie en el array de favoritos por el ID
-    const indexToDelete = favoriteSeriesList.findIndex((fav) => fav.mal_id === idMalId);
+    const indexToDelete = validFavoriteSeriesList.findIndex((fav) => fav.mal_id === idMalId);
 
     if (indexToDelete !== -1) { //Si indexToDelete es diferente de -1, significa que se ha encontrado la serie en la lista de favoritos
         // Si la serie existe, eliminarla
@@ -176,10 +191,8 @@ function handleDeleteFavorite(idMalId) {
 
         // Re-renderizar la lista de favoritos
         renderingSeries(favoriteSeriesList, favoriteSeries);
-    } else {
-        console.log("Serie no encontrada para eliminar");
     }
-}
+};
 
 //FUNCIONALIDAD AL RECARGAR LA PÁGINA LA USUARIA SE PINTEN EN LA LISTA DE FAVORITOS, SUS SERIES FAVORITAS
 function reloadFavoritesToFavoritesList() {
@@ -201,10 +214,13 @@ const getApiSeries = () => {
     fetch (`https://api.jikan.moe/v4/anime?q=${searchInput.value}`)
     .then (res => res.json())
     .then (data => {
-        console.log(data);
+        //console.log(data);
         resultsList = data.data;
+        //if (resultsList && resultsList.length > 0) {
         renderingSeries(resultsList, resultsSection);
-        
+        //} else {
+        //   console.error("No se encontraron resultados");
+        //}
     })
 };
 
