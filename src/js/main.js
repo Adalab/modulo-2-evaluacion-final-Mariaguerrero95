@@ -231,6 +231,7 @@ searchButton.addEventListener("click", handleClick);
 //BONUS BOTÓN RESET
 //Seleccionar el botón Reset (Variable botón reset)
 const resetButton = document.querySelector(".js-reset");
+
 //Creo una función callback para resetear la página
 function resetPage(){
     favoriteSeriesList = [];
