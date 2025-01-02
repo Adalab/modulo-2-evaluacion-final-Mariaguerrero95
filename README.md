@@ -31,4 +31,4 @@ npm run dev
 
 ## Créditos
 
-Este proyecto ha sido posible gracias a Adalab y la alumna María
+Este proyecto ha sido posible gracias a Adalab y la alumna María.
